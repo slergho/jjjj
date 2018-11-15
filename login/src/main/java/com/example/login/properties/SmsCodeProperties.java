@@ -4,7 +4,6 @@ import lombok.Data;
 
 /**
  * 短信验证码
- * Created on 2018/1/10.
  */
 @Data
 public class SmsCodeProperties {

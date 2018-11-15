@@ -18,7 +18,7 @@
                 <div class="login_title">
                     登录
                 </div>
-            <#--<form action="#" method="post" id="loginForm">-->
+            <#--<form action="/index" method="get" id="loginForm">-->
 
                 <div class="form_text_ipt">
                     <input name="username" type="text" placeholder="手机号/邮箱" value="admin">

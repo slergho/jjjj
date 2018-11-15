@@ -8,23 +8,22 @@
     <script src="${re.contextPath}/plugin/boot.js" type="text/javascript"></script>
 </head>
 <body>
-<h1>用户管理</h1>
-<#include "../common/message.ftl">
+<h1>角色管理</h1>
+<#include "../common/message.html">
 <div style="width:800px;">
     <div class="mini-toolbar" style="border-bottom:0;padding:0px;">
         <table style="width:100%;">
             <tr>
                 <td style="width:100%;">
-                     <@sec.authorize access="hasAuthority('user:select')">
+                     <@sec.authorize access="hasAuthority('role:add')">
                     <a class="mini-button" iconCls="icon-add" onclick="add()">增加</a>
                      </@sec.authorize>
-                    <@sec.authorize access="hasAuthority('user:update')">
+                     <@sec.authorize access="hasAuthority('role:update')">
                     <a class="mini-button" iconCls="icon-add" onclick="edit()">编辑</a>
-                    </@sec.authorize>
-                    <@sec.authorize access="hasAuthority('user:del')">
+                     <@sec.authorize access="hasAuthority('role:del')">
+                      </@sec.authorize>
                     <a class="mini-button" iconCls="icon-remove" onclick="remove()">删除</a>
-                    </@sec.authorize>
-
+                     </@sec.authorize>
                 </td>
                 <td style="white-space:nowrap;">
                     <input id="key" class="mini-textbox" emptyText="请输入姓名" style="width:150px;" onenter="onKeyEnter"/>
@@ -35,16 +34,12 @@
     </div>
 </div>
 <div id="datagrid1" class="mini-datagrid" style="width:800px;height:280px;" allowResize="true"
-     url="${re.contextPath}/user/userList" idField="id" multiSelect="true"
->
+     url="${re.contextPath}/role/roleList" idField="id" multiSelect="true">
     <div property="columns">
         <div type="checkcolumn"></div>
-        <div field="username" width="120" headerAlign="center" allowSort="true">用户名</div>
-        <div field="age" width="120" headerAlign="center" allowSort="true">年龄</div>
-        <div field="email" width="120" headerAlign="center" allowSort="true">邮箱</div>
-        <div field="realName" width="120" headerAlign="center" allowSort="true">真实姓名</div>
+        <div field="roleName" width="120" headerAlign="center" allowSort="true">角色名称</div>
+        <div field="remark" width="120" headerAlign="center" allowSort="true">角色描述</div>
         <div field="createDate" width="120" headerAlign="center" allowSort="true" renderer="onBirthdayRenderer">创建时间</div>
-        <div field="updateDate" width="120" headerAlign="center" allowSort="true" renderer="onBirthdayRenderer">更新时间</div>
     </div>
 </div>
 <script type="text/javascript">
@@ -55,8 +50,8 @@
 
     function add() {
         mini.open({
-            url: "${re.contextPath}/user/addUser",
-            title: "新增员工", width: 600, height: 400,
+            url: "${re.contextPath}/role/addRole",
+            title: "新增角色", width: 600, height: 400,
             onload: function () {
                 var iframe = this.getIFrameEl();
                 var data = {action: "new"};
@@ -73,8 +68,8 @@
         var row = grid.getSelected();
         if (row) {
             mini.open({
-                url: "${re.contextPath}/user/addUser",
-                title: "编辑员工", width: 600, height: 400,
+                url: "${re.contextPath}/role/addRole",
+                title: "编辑角色", width: 600, height: 600,
                 onload: function () {
                     var iframe = this.getIFrameEl();
                     var data = {action: "edit", id: row.id};
@@ -88,8 +83,7 @@
             });
 
         } else {
-            notify("请选中一条记录");
-//            alert("请选中一条记录");
+            alert("请选中一条记录");
         }
 
     }
@@ -108,11 +102,12 @@
                             var id = ids.join(',');
                             grid.loading("操作中，请稍后......");
                             $.ajax({
-                                url: "${re.contextPath}/user/del/" + id,
+                                url: "${re.contextPath}/role/del/" + id,
                                 success: function (text) {
-                                    if (text.code == 105) {
-                                        notify(text.msg);
-                                    } else {
+//                                    alert(text.data);
+                                    if(text.data =="选择的角色已绑定用户！" ){
+                                        notify("选择的角色已绑定用户！");
+                                    }else{
                                         showTips(text.data);
                                     }
                                     grid.reload();
@@ -147,21 +142,6 @@
         var value = e.value;
 //        if (value) return mini.formatDate(value, 'yyyy-MM-dd');
         if (value) return getLocalDate(value);
-        return "";
-    }
-
-    function onMarriedRenderer(e) {
-        if (e.value == 1) return "是";
-        else return "否";
-    }
-
-    var Genders = [{id: 1, text: '男'}, {id: 2, text: '女'}];
-
-    function onGenderRenderer(e) {
-        for (var i = 0, l = Genders.length; i < l; i++) {
-            var g = Genders[i];
-            if (g.id == e.value) return g.text;
-        }
         return "";
     }
 

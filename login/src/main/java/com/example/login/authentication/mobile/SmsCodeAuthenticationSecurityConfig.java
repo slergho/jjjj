@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 public class SmsCodeAuthenticationSecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
 
     @Autowired
-    private AuthenticationFailureHandler merryyouAuthenticationFailureHandler;
+    private AuthenticationFailureHandler customAuthenticationFailureHandler;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -27,7 +27,7 @@ public class SmsCodeAuthenticationSecurityConfig extends SecurityConfigurerAdapt
         //自定义SmsCodeAuthenticationFilter过滤器
         SmsCodeAuthenticationFilter smsCodeAuthenticationFilter = new SmsCodeAuthenticationFilter();
         smsCodeAuthenticationFilter.setAuthenticationManager(http.getSharedObject(AuthenticationManager.class));
-        smsCodeAuthenticationFilter.setAuthenticationFailureHandler(merryyouAuthenticationFailureHandler);
+        smsCodeAuthenticationFilter.setAuthenticationFailureHandler(customAuthenticationFailureHandler);
 
         //设置自定义SmsCodeAuthenticationProvider的认证器userDetailsService
         SmsCodeAuthenticationProvider smsCodeAuthenticationProvider = new SmsCodeAuthenticationProvider();
