@@ -20,7 +20,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/static/**","/ftl/login"
-                                            ,"/ftl/","/authentication/register","/socialRegister").authenticated()
+                                            ,"/ftl/","/authentication/register","/socialRegister", "/authentication/require").authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/login")
@@ -28,5 +28,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureHandler(customAuthenticationFailureHandler)
                 .and()
                 .logout().logoutSuccessUrl("/index").permitAll();
+            http.httpBasic().disable();
     }
 }
